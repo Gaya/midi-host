@@ -11,11 +11,8 @@ module.exports = {
   target: ['node'],
   plugins: [
     new webpack.BannerPlugin({
-      banner: '#!/usr/bin/env node',
+      banner: `#!/usr/bin/env node\n\nSETTINGS_PATH = '/home/pi/midi.settings.json';`,
       raw: true,
-    }),
-    new webpack.DefinePlugin({
-      'process.env.SETTINGS_PATH': `"${process.env.SETTINGS_PATH}"`,
     }),
   ],
 };

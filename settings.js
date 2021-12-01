@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 
-const path = process.env.SETTINGS_PATH || `${os.homedir()}/midi.settings.json`;
+const path = SETTINGS_PATH || process.env.SETTINGS_PATH || `${os.homedir()}/midi.settings.json`;
 
 /**
  * Returns device setting.

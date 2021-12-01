@@ -22,50 +22,38 @@ What also is not ideal is that only connects to port 0 of a MIDI device, so I ad
 
 ```sudo apt-get install nodejs git```
 
-2. Clone the project:
+2. Create new file in bin folder:
 
-```git clone git@github.com:Gaya/midi-host.git```
+```sudo vim /usr/local/bin/connect.js```
 
-3. Go into `midi-host` folder:
+3. Copy the contents of [`./bin/connect.js`](https://raw.githubusercontent.com/Gaya/midi-host/main/bin/connect.js) to the file.
 
-```cd midi-host```
+4. (Optional) You can change the location of the settings file by changing `/home/pi/midi.settings.json` to your desired path. The default for Raspberry Pi is `/home/pi/midi.settings.json`.
 
-4. Install `midi-host` dependencies:
-
-```npm install```
-
-5. Generate bin file (you can change `/home/pi/midi.settings.json` to your desired location, this is default for Raspberry Pi):
-
-```SETTINGS_PATH=/home/pi/midi.settings.json npm run build```
-
-6. Copy bin file to bin folder:
-
-```sudo cp ./bin/connect.js /usr/local/bin/connect.js```
-
-7. Change permissions:
+5. Change permissions to the script:
 
 ```sudo chmod +x /usr/local/bin/connect.js```
 
-8. Automatically connect devices on add / remove USB devices. Let's create a new file:
+6. Automatically connect devices on add / remove USB devices. Let's create a new file:
 
 ```sudo vim /etc/udev/rules.d/33-midiusb.rules```
 
-9. Add the following:
+7. Add the following:
 
 ```ACTION=="add|remove", SUBSYSTEM=="usb", DRIVER=="usb", RUN+="/usr/local/bin/connect.js"```
 
-10. Restart udev:
+8. Restart udev:
 
 ```
 sudo udevadm control --reload
 sudo service udev restart
 ```
 
-11. Configure MIDI connection on startup. Let's create a new system service file:
+9. Configure MIDI connection on startup. Let's create a new system service file:
 
 ```sudo vim /lib/systemd/system/midi.service```
 
-12. Add the following:
+10. Add the following:
 
 ```
 
@@ -79,7 +67,7 @@ ExecStart=/usr/local/bin/connect.js
 WantedBy=multi-user.target
 ```
 
-13. Restart service:
+11. Restart service:
 
 ```
 sudo systemctl daemon-reload
@@ -87,13 +75,13 @@ sudo systemctl enable midi.service
 sudo systemctl start midi.service
 ```
 
-14. Check if it's working (that is if you have any MIDI devices connected):
+12. Check if it's working (that is if you have any MIDI devices connected):
 
 ```aconnect -l```
 
 ## Adding config
 
-At step 5 of the installation process we defined a settings file location. Create a new file in that location:
+At step 4 of the installation process we defined a settings file location. Create a new file in that location:
 
 ```vim /home/pi/midi.settings.json```
 
