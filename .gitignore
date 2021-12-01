@@ -1,2 +1,4 @@
 node_modules/
-settings.json
+bin/
+midi.settings.json
+.env

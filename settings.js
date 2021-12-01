@@ -1,4 +1,7 @@
 const fs = require('fs');
+const os = require('os');
+
+const path = process.env.SETTINGS_PATH || `${os.homedir()}/midi.settings.json`;
 
 /**
  * Returns device setting.
@@ -45,16 +48,18 @@ function canMidiOut(settings, device) {
 
 function loadSettings() {
   try {
-    const settings = fs.readFileSync(`${__dirname}/settings.json`);
+    const settings = fs.readFileSync(path);
     return JSON.parse(settings.toString());
   } catch (err) {
+    console.info(`No settings file found at ${path}`);
+
     return {};
   }
 }
 
 function writeSettings(settings) {
   try {
-    fs.writeFileSync(`${__dirname}/settings.json`, settings);
+    fs.writeFileSync(path, settings);
   } catch (err) {
     console.error(err);
   }
