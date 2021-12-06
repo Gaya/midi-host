@@ -1,7 +1,8 @@
 const fs = require('fs');
 const os = require('os');
+const { exec } = require('child_process');
 
-const path = SETTINGS_PATH || process.env.SETTINGS_PATH || `${os.homedir()}/midi.settings.json`;
+const path = process.env.SETTINGS_PATH || SETTINGS_PATH || `${os.homedir()}/midi.settings.json`;
 
 /**
  * Returns device setting.
@@ -65,8 +66,28 @@ function writeSettings(settings) {
   }
 }
 
+function execCommand(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      if (stderr) {
+        reject(`stderr: ${stderr}`);
+        return;
+      }
+
+      resolve(stdout);
+    });
+  });
+}
+
 module.exports = {
+  getDeviceSetting,
   canMidiIn,
   canMidiOut,
   loadSettings,
+  execCommand,
 }

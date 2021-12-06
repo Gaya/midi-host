@@ -56,7 +56,6 @@ sudo service udev restart
 10. Add the following:
 
 ```
-
 [Unit]
 Description=Initial USB MIDI connect
 

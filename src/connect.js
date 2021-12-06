@@ -1,26 +1,7 @@
 const { exec } = require('child_process');
 
 const parse = require('./parse');
-const { loadSettings, canMidiIn, canMidiOut } = require('./settings');
-
-function execCommand(cmd) {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      if (stderr) {
-        reject(`stderr: ${stderr}`);
-        return;
-      }
-
-      resolve(stdout);
-    });
-  });
-
-}
+const { loadSettings, canMidiIn, canMidiOut, execCommand } = require('./settings');
 
 async function connectAll() {
   // disconnect current Midi devices

@@ -7,9 +7,15 @@ client 14: 'Midi Through' [type=kernel]
     0 'Midi Through Port-0'
 client 20: 'MIDI Keyboard' [type=kernel,card=1]
     0 'MIDI Keyboard MIDI 1'
+      Connecting To: 30:0, 30:1
+      Connected From: 30:0, 30:1
 client 30: 'Synth' [type=kernel,card=2]
     0 'Synth MIDI 1'
-    1 'Synth MIDI 2'`;
+      Connecting To: 20:0
+      Connected From: 20:0
+    1 'Synth MIDI 2'
+      Connecting To: 20:0
+      Connected From: 20:0`;
 
 describe('parse', () => {
   it('should correctly list MIDI devices and ports', () => {

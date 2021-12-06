@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>MIDI Host</title>
+    <script>
+        function start() {
+          document.getElementById('loaded').innerText = 'Loaded';
+
+          const socket = new WebSocket("ws://localhost:4000");
+
+          socket.onopen = function() {
+            document.getElementById('connected').innerText = 'Connected';
+          };
+
+          socket.onmessage = function(event) {
+            document.getElementById('last-update').innerText = event.data;
+          }
+        }
+    </script>
+    <style>
+        html, body {
+            font-family: sans-serif;
+            font-size: 18px;
+            background: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="loaded">Nope</div>
+    <div id="connected">Nope</div>
+    <div id="last-update">None</div>
+    <script>start();</script>
+</body>
+</html>
