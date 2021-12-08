@@ -16,28 +16,25 @@ app.get('/', function (req, res) {
 });
 
 function getDeviceList() {
-  const devices = [
-    {
-      name: 'LPK25',
-      id: 20,
-      ports: [0],
-    },
-    {
-      name: 'microKEY2',
-      id: 30,
-      ports: [0],
-    },
-    {
-      name: 'Deepmind12D',
-      id: 40,
-      ports: [0, 1],
-    },
-  ];
-
-  return Promise.resolve(devices);
-
-  // return execCommand('aconnect -i -l')
-  //   .then(parse);
+  return execCommand('aconnect -i -l')
+    .then(parse)
+    .catch(() => [
+      {
+        name: 'LPK25',
+        id: 20,
+        ports: [0],
+      },
+      {
+        name: 'microKEY2',
+        id: 30,
+        ports: [0],
+      },
+      {
+        name: 'Deepmind12D',
+        id: 40,
+        ports: [0, 1],
+      },
+    ]);
 }
 
 function sendUpdate(list) {
@@ -53,7 +50,7 @@ function sendUpdate(list) {
       });
 
       list.forEach((ws) => {
-        ws.send(JSON.stringify({ devicesWithSettings, devices, settings }));
+        ws.send(JSON.stringify({ devices: devicesWithSettings }));
       });
     });
 }
@@ -71,3 +68,5 @@ wss.on('connection', (ws) => {
 });
 
 app.listen(3000);
+
+console.info('Started app on port 3000');

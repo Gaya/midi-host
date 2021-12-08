@@ -2,6 +2,25 @@
 <head>
     <title>MIDI Host</title>
     <script>
+        function removeAllChildNodes(parent) {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+
+        function settingName(input) {
+          switch (input) {
+            case 0:
+              return "Off";
+            case 1:
+              return "MIDI IN + OUT";
+            case 2:
+              return "MIDI IN";
+            case 3:
+              return "MIDI OUT";
+          }
+        }
+
         function start() {
           document.getElementById('loaded').innerText = 'Loaded';
 
@@ -12,23 +31,145 @@
           };
 
           socket.onmessage = function(event) {
-            document.getElementById('last-update').innerText = event.data;
+            const data = JSON.parse(event.data);
+
+            const devices = document.getElementById('devices');
+            removeAllChildNodes(devices);
+
+            for (const device of data.devices) {
+              const deviceElement = document.querySelector('#device-ghost div').cloneNode(true);
+
+              deviceElement.querySelector('.device-id').innerText = device.id;
+              deviceElement.querySelector('.device-name').innerText = device.name;
+              deviceElement.querySelector('.device-ports').innerText = device.ports.join(', ');
+              deviceElement.querySelector('.device-setting').innerText = settingName(device.setting);
+
+              devices.appendChild(deviceElement);
+            }
+
+            console.log(data);
           }
         }
     </script>
     <style>
         html, body {
-            font-family: sans-serif;
-            font-size: 18px;
+            font-family: monospace;
+            font-size: 12px;
             background: #000;
             color: #fff;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            width: 100%;
+        }
+
+        body.debug {
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .app {
+            width: 100%;
+        }
+
+        .debug .app {
+            width: 480px;
+            height: 320px;
+            border: 1px solid #fff;
+        }
+
+        .status {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            background: #309568;
+            color: #fff;
+            text-transform: lowercase;
+        }
+
+        .status-item {
+            padding: 3px;
+            display: flex;
+        }
+
+        .status-name {
+            margin-right: 4px;
+            font-weight: bold;
+        }
+
+        .ghost {
+            display: none;
+        }
+
+        #devices {
+            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 12px;
+            row-gap: 12px;
+        }
+
+        .device {
+            border: 1px solid #333;
+        }
+
+        .device-header {
+            display: flex;
+            background: #333;
+            padding: 3px;
+        }
+
+        .device-header-ports,
+        .device-header-id {
+            display: flex;
+            color: #aaa;
+        }
+
+        .device-header-id {
+            margin-right: 3px;
+        }
+
+        .device-header-ports {
+            margin-left: 1em;
+        }
+
+        .device-setting {
+            padding: 3px;
         }
     </style>
 </head>
 <body>
-    <div id="loaded">Nope</div>
-    <div id="connected">Nope</div>
-    <div id="last-update">None</div>
+    <div class="app">
+        <section class="status">
+            <div class="status-item">
+                <div class="status-name">App State:</div>
+                <div id="loaded">Loading..</div>
+            </div>
+            <div class="status-item">
+                <div class="status-name">Connected:</div>
+                <div id="connected">Waiting...</div>
+            </div>
+        </section>
+        <section id="devices"></section>
+        <div id="device-ghost" class="ghost">
+            <div class="device">
+                <div class="device-header">
+                    <div class="device-header-id">
+                        <span class="device-id"></span>
+                        <span>:</span>
+                    </div>
+                    <span class="device-name"></span>
+                    <div class="device-header-ports">
+                        [
+                        <span class="device-ports"></span>
+                        ]
+                    </div>
+                </div>
+                <div class="device-setting"></div>
+            </div>
+        </div>
+    </div>
     <script>start();</script>
 </body>
 </html>
