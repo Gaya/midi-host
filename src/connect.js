@@ -1,5 +1,3 @@
-const { exec } = require('child_process');
-
 const parse = require('./parse');
 const { loadSettings, canMidiIn, canMidiOut, execCommand } = require('./settings');
 
@@ -38,6 +36,9 @@ async function connectAll() {
 }
 
 connectAll()
+  .then(() => {
+    console.log('Updated');
+  })
   .catch((error) => {
     console.error(error);
   });

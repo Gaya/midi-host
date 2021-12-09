@@ -11,29 +11,15 @@ const wss = new WebSocketServer({ port: 4000 });
 
 const clients = {};
 
-app.get('/', function (req, res) {
-  res.send(webpage.default);
-});
-
 function getDeviceList() {
   return execCommand('aconnect -i -l')
     .then(parse)
     .catch(() => [
       {
-        name: 'LPK25',
-        id: 20,
+        name: 'Cannot find devices',
+        id: 0,
         ports: [0],
-      },
-      {
-        name: 'microKEY2',
-        id: 30,
-        ports: [0],
-      },
-      {
-        name: 'Deepmind12D',
-        id: 40,
-        ports: [0, 1],
-      },
+      }
     ]);
 }
 
@@ -50,6 +36,7 @@ function sendUpdate(list) {
       });
 
       list.forEach((ws) => {
+        console.info('Sending update');
         ws.send(JSON.stringify({ devices: devicesWithSettings }));
       });
     });
@@ -66,6 +53,14 @@ wss.on('connection', (ws) => {
 
   sendUpdate([ws]);
 });
+
+app.get('/', function (req, res) {
+  res.send(webpage.default);
+});
+
+setInterval(() => {
+  sendUpdate(Object.values(clients));
+}, 2000);
 
 app.listen(3000);
 

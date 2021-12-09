@@ -33,6 +33,8 @@
           socket.onmessage = function(event) {
             const data = JSON.parse(event.data);
 
+            document.getElementById('status-updated').innerText = new Date().toISOString();
+
             const devices = document.getElementById('devices');
             removeAllChildNodes(devices);
 
@@ -46,8 +48,6 @@
 
               devices.appendChild(deviceElement);
             }
-
-            console.log(data);
           }
         }
     </script>
@@ -143,13 +143,14 @@
     <div class="app">
         <section class="status">
             <div class="status-item">
-                <div class="status-name">App State:</div>
+                <div class="status-name">App:</div>
                 <div id="loaded">Loading..</div>
             </div>
             <div class="status-item">
-                <div class="status-name">Connected:</div>
+                <div class="status-name">Server:</div>
                 <div id="connected">Waiting...</div>
             </div>
+            <div id="status-updated"></div>
         </section>
         <section id="devices"></section>
         <div id="device-ghost" class="ghost">
